@@ -5,5 +5,8 @@
 */
 
 int main(){
+    graph test1 ("test.txt");
+    // test1.display();
+    test1.dfs();
     return 0;
 }
