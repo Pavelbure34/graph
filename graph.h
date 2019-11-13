@@ -1,6 +1,7 @@
 #ifndef _GRAPH_H
 #define _GRAPH_H
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 using namespace std;
@@ -9,24 +10,36 @@ using namespace std;
     Coded by Alistaire and Youssef
 */
 
-template<class T>
 class vertex{
 public:
-    int id;                      //integer identifier
-    T* key;                      //key item
-    vector<vertex<T>*> inbound;  //for indegree
-    vector<vertex<T>*> outbound; //for outdegree
+    int id;
+    vector<int> ob;  //outbound
 
-    vertex(T* item = NULL);      //constructor
+    vertex();        //default constructor
+    vertex(int id);  //2nd constructor
 };
 
-template<class T>
+class edge{
+public:
+    int start;     
+    int dest;
+    int weight;
+
+    edge():weight(0){};
+    edge(int start, int dest):start(start), dest(dest), weight(0){};
+    edge(int start, int dest, int weight):start(start), dest(dest), weight(weight){};
+};
+
 class graph{
 private:
-    int size = 0;
+    vector<vertex> V;
+    vector<edge> E;
 
-    graph();
+public:
+    graph(string file);
+    graph(graph &g);
 
+    
 };
 
 #include "graph.cpp"
