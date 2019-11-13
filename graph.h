@@ -21,7 +21,7 @@ public:
 
 class edge{
 public:
-    int start;     
+    int start;
     int dest;
     int weight;
 
@@ -34,12 +34,16 @@ class graph{
 private:
     vector<vertex> V;
     vector<edge> E;
+    map<vector<int> > matrix;
 
 public:
     graph(string file);
     graph(graph &g);
 
-    
+    void insert(int n);
+
+    void make_mx(string file);
+
 };
 
 #include "graph.cpp"
