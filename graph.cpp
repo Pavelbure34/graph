@@ -5,27 +5,27 @@
     Coded by Alistaire and Youssef
 */
 
-void vertex::operator=(const vertex &u){
-  this->id = u.id;
-  this->visited = u.visited;
-  this->processed = u.processed;
-}
-
-string vertex::toString() const{
-  stringstream s;
-  string item;
-  s << id;
-  s >> item;
-  return item;
-}
-
-string edge::toString() const{
-  stringstream s;
-  string item;
-  s << "<" << start << ":" << dest << ";" << weight << ">";
-  s >> item;
-  return item;
-}
+// void vertex::operator=(const vertex &u){
+//   this->id = u.id;
+//   this->visited = u.visited;
+//   this->processed = u.processed;
+// }
+//
+// string vertex::toString() const{
+//   stringstream s;
+//   string item;
+//   s << id;
+//   s >> item;
+//   return item;
+// }
+//
+// string edge::toString() const{
+//   stringstream s;
+//   string item;
+//   s << "<" << start << ":" << dest << ";" << weight << ">";
+//   s >> item;
+//   return item;
+// }
 
 graph::graph(string file){
   make_mx(file);
@@ -36,13 +36,8 @@ graph::graph(string file){
 
 void graph::insert(vector<vector<int> > matrix){
   for (int i = 0; i < matrix.size(); i++){
-    vertex v(i);
-    V.push_back(v);
-    for(int j = 0; j< matrix[i].size(); j++)
-      if(matrix[i][j]!=0){
-        edge e(i, j, matrix[i][j]); //start, dest, weight
-        E.push_back(e);
-      }
+    V.push_back(i);
+
   }
 }
 
@@ -85,35 +80,32 @@ string graph::rm_space(string str){
 }
 
 void graph::dfs(){
-    stack<vertex> s;
-    V[0].visited = true;
-    cout<<V[0]<<" ";
-    s.push(V[0]);
-    while(!s.empty()){
-      cout<<"here"<<endl;
-      vertex u(s.top());
-      s.pop();
-      for(int i = 0; i<adj_list[u.id].size();i++){
-        vertex* temp =  findV(adj_list[u.id][i]);
-        if(!temp->visited){
-          cout<<*temp<<" ";
-          temp->visited = true;
-          s.push(*temp);
-        }
-      }
-      cout<<endl;
-      u.processed =true;
+    stack<int> s;
+    map<int, int> colors; //1:w 2:g 3:b
+
+    for (int key: V){
+      colors[key] = 1;
     }
 
+    cout<<V[0]<<" ";
+    s.push(V[0]);
+
+    while(!s.empty()){
+      int u(s.top());
+      s.pop();
+      for (int v: adj_list[u]){
+        if(colors.find(v)->second==1){
+          cout<<v<<" ";
+          colors[v] = 2;
+          s.push(v);
+        }
+      }
+
+      colors[u]=3;
+    }
 }
 
-vertex* graph::findV(int n) const{
-  for (vertex v: V)
-    if (v.id == n)
-      return new vertex(v);
 
-  //throw non existing vertex exception
-}
 
 void graph::display() const{
   cout<<"Adjacency MATRIX:"<<endl;
@@ -142,10 +134,6 @@ void graph::display() const{
   }
   cout <<  endl;
 
-  cout<<"EDGE LIST:"<<endl;
-  for (auto item: E){
-    cout << item << " ";
-  }
 
   cout << endl;
 }
