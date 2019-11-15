@@ -1,31 +1,5 @@
 #include "graph.h"
 
-/*
-    This is implementation for graph class.
-    Coded by Alistaire and Youssef
-*/
-
-// void vertex::operator=(const vertex &u){
-//   this->id = u.id;
-//   this->visited = u.visited;
-//   this->processed = u.processed;
-// }
-//
-// string vertex::toString() const{
-//   stringstream s;
-//   string item;
-//   s << id;
-//   s >> item;
-//   return item;
-// }
-//
-// string edge::toString() const{
-//   stringstream s;
-//   string item;
-//   s << "<" << start << ":" << dest << ";" << weight << ">";
-//   s >> item;
-//   return item;
-// }
 
 graph::graph(string file){
   make_mx(file);
@@ -33,11 +7,23 @@ graph::graph(string file){
   make_list();
 }
 
+void graph::topologicalsort(){
+
+  for (int r = 0; r < matrix.size(); r++){
+    for (int c = 0; c < matrix[r].size(); c++)
+      
+  }
+
+
+}
+
+bool graph::isCycle() const{
+
+}
 
 void graph::insert(vector<vector<int> > matrix){
   for (int i = 0; i < matrix.size(); i++){
     V.push_back(i);
-
   }
 }
 
@@ -83,31 +69,33 @@ void graph::dfs(){
     stack<int> s;
     map<int, int> colors; //1:w 2:g 3:b
 
-    for (int key: V){
+    for (int key: V){ // make em all white
       colors[key] = 1;
     }
 
-    cout<<V[0]<<" ";
+    // cout<<V[0]<<" ";
     s.push(V[0]);
+    colors[V[0]] = 1;
 
     while(!s.empty()){
       int u(s.top());
       s.pop();
       for (int v: adj_list[u]){
         if(colors.find(v)->second==1){
-          cout<<v<<" ";
+          // cout<<v<<" "; //if gray means visiting
           colors[v] = 2;
           s.push(v);
         }
       }
-
+      cout<<u<<" ";
       colors[u]=3;
     }
+    cout<<endl;
 }
 
 
 
-void graph::display() const{
+void graph::display() {
   cout<<"Adjacency MATRIX:"<<endl;
   for (int i = 0; i < matrix.size(); i++){
     for (int j = 0; j < matrix[i].size(); j++)
@@ -133,7 +121,10 @@ void graph::display() const{
     cout << item << " ";
   }
   cout <<  endl;
+  cout <<  endl;
 
+  cout<<"Depth first Search:"<<endl;
+  dfs();
 
   cout << endl;
 }
