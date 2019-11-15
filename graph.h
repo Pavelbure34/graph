@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include <queue>
 #include <map>
 using namespace std;
 /*
@@ -21,6 +22,7 @@ private:
     vector<int> V;
     vector<vector<int> > matrix;
     map<int, vector<int> > adj_list;
+    map<int, int> inbound;
 
 public:
     graph(string file);
@@ -28,7 +30,7 @@ public:
 
     void display();
     void dfs();
-    // void topologicalsort();
+    void topologicalsort();
 
 private:
     string rm_space(string str);
@@ -36,6 +38,7 @@ private:
     void make_mx(string file);
     void make_list();
     void initialize();
+    void getInbound();
     bool isCycle() const;
 };
 

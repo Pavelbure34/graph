@@ -5,21 +5,46 @@ graph::graph(string file){
   make_mx(file);
   insert(matrix);
   make_list();
+  getInbound();
 }
 
 void graph::topologicalsort(){
+queue<int> q;
+vector<int> v = V;
+map<int, int> visited; //1:no 2:yes
 
-  for (int r = 0; r < matrix.size(); r++){
-    for (int c = 0; c < matrix[r].size(); c++)
-      
+
+
+for (int key: V){ //find all the ones with 0 indegree
+  if(inbound[key]==0){ //if it is a zero then add it to the queue
+    q.push(key);
   }
-
-
 }
 
-bool graph::isCycle() const{
-
+  while(!q.empty()){ //while the queue is not empty
+    int u = q.front(); //set u to be the front vertex in the stack
+    q.pop();
+    cout<<u<<" ";
+    for(int n: adj_list[u]){ //for all the successors of u
+          inbound[n]-=1; //decrement the indegree of the current indegree
+          if(inbound[n]==0){ //if the indegree is 0 push the vertex into the stack
+            q.push(n);
+          }
+    }
+  }
 }
+
+void graph::getInbound(){ //this gets the indegree numbers for all the vertices
+  for (int key: V) //this loop adds all of the values in our vertex list to our map and sets them to zero
+    inbound[key]= 0;//sets to 0 in case there is none
+
+  for (int key: V){ //soo for every vertex...
+    for(int z: adj_list[key]){//...we add one TO THE NEIGHBOR'S value in the map because thats inbound to it
+      inbound[z]+=1;
+    }
+  }
+}
+
 
 void graph::insert(vector<vector<int> > matrix){
   for (int i = 0; i < matrix.size(); i++){
@@ -50,6 +75,7 @@ void graph::make_mx(string file){
 
 void graph::make_list(){
   for (int i = 0; i < matrix.size(); i++){
+    adj_list[i].resize(0); // needed to ensure if empty it will show an empty list
     for (int j = 0; j < matrix[i].size(); j++)
       if (matrix[i][j] != 0)
         adj_list[i].push_back(j);
@@ -73,7 +99,6 @@ void graph::dfs(){
       colors[key] = 1;
     }
 
-    // cout<<V[0]<<" ";
     s.push(V[0]);
     colors[V[0]] = 1;
 
@@ -82,12 +107,12 @@ void graph::dfs(){
       s.pop();
       for (int v: adj_list[u]){
         if(colors.find(v)->second==1){
-          // cout<<v<<" "; //if gray means visiting
           colors[v] = 2;
           s.push(v);
         }
       }
       cout<<u<<" ";
+
       colors[u]=3;
     }
     cout<<endl;
@@ -96,7 +121,7 @@ void graph::dfs(){
 
 
 void graph::display() {
-  cout<<"Adjacency MATRIX:"<<endl;
+  cout<<"Adjacency Matrix:"<<endl;
   for (int i = 0; i < matrix.size(); i++){
     for (int j = 0; j < matrix[i].size(); j++)
       cout << matrix[i][j] << " ";
@@ -104,7 +129,7 @@ void graph::display() {
   }
   cout << endl;
 
-  cout<<"Adjacency List:"<<endl;
+  cout<<"Adjacency List (outbound):"<<endl;
   for (auto pair: adj_list){
     cout << pair.first << ": [";
     for (int i = 0; i < pair.second.size(); i++){
@@ -116,6 +141,16 @@ void graph::display() {
   }
     cout <<  endl;
 
+    cout<<"Inbound List:"<<endl;
+    for (auto pair: inbound){
+      cout << pair.first << ": [";
+      cout << pair.second;
+      cout << "]" << endl;
+    }
+      cout <<  endl;
+
+
+
   cout<<"VERTEX LIST:"<<endl;
   for (auto item: V){
     cout << item << " ";
@@ -125,6 +160,11 @@ void graph::display() {
 
   cout<<"Depth first Search:"<<endl;
   dfs();
+
+  cout << endl;
+
+  cout<<"Topologicalsort sort:"<<endl;
+  topologicalsort();
 
   cout << endl;
 }
