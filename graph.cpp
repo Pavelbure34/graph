@@ -11,8 +11,6 @@ graph::graph(string file){
 void graph::topologicalsort(){
 queue<int> q;
 vector<int> v = V;
-map<int, int> visited; //1:no 2:yes
-
 
 
 for (int key: V){ //find all the ones with 0 indegree
