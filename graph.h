@@ -26,15 +26,20 @@ public:
     graph(string file, int opt = 0);      //constructor #1
 
     void display();                   //showing graph information
-    void dfs();                       //depth first search
+    string dfs();                     //depth first search
     void topologicalsort();           //topological sort
+
+    void showMatrix();
+    void showList();
+    void showInboundList();
+    void showVertexList();
 
 private:
     string rm_space(string str);      //remove the white space of the string
     void insert(                      //inserting matrix
         vector<vector<int> > matrix); 
     void make_mx(string file);        //making the matrix
-    void make_star_mx(string file);   //making matrix for kattis star
+    void make_star_list(string file); //making matrix for kattis star
     void make_coast_mx(string file);  //making matrix for kattis coast
     void make_list();                 //making the list based on the matrix
     void initialize();                //initializing the data
@@ -42,7 +47,7 @@ private:
     bool isCycle() const;             //detecting cycles
 
     int* getRowCol(string line);      //extracting row and col from counting stars
-    void stars(int r, int c, int &s);
+    void stars(int i, ifstream &f);   //analyze the bit map and count the number of the stars.
 };
 #include "graph.cpp"
 #endif

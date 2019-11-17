@@ -1,6 +1,7 @@
 #include "graph.h"
 
 int main(){
-    graph stars("testStars.txt", 1);
+    graph stars("stars.txt", 1);
+    // stars.display();
     return 0;
 }

@@ -10,7 +10,7 @@ graph::graph(string file, int opt){
   //constructor #1
   switch(opt){
     case 1:        //kattis:stars
-      make_star_mx(file);
+      make_star_list(file);
       break;
     case 2:        //kattis:coast
       break;
@@ -40,7 +40,7 @@ void graph::topologicalsort(){
   while(!q.empty()){        //while the queue is not empty
     int u = q.front();      //set u to be the front vertex in the stack
     q.pop();
-    cout<<u<<" ";
+    cout << u << " ";
     for(int n: adj_list[u]){//for all the successors of u
           inbound[n]-=1;    //decrement the indegree of the current indegree
           if(inbound[n]==0){//if the indegree is 0 push the vertex into the stack
@@ -101,41 +101,63 @@ void graph::make_mx(string file){
   i.close();
 }
 
-void graph::make_star_mx(string file){
+void graph::make_star_list(string file){
   ifstream f;
   f.open(file);
   string line;
   int *rowCol, row, col;
   int case_1, case_2;
+  case_1 = case_2 = 0;         //initializing
 
   //case 1.
-  getline(f, line);             //reading the first row and column 
-  rowCol = getRowCol(line);
-  row = rowCol[0]; 
-  col = rowCol[1];
+  stars(1, f);
+ 
+  V.clear();      //resetting
+  adj_list.clear();
+  cout << endl;
+  
+  //case2
+  stars(2, f);
 
-  matrix.resize(row);
+  f.close();
+}
+
+void graph::stars(int i, ifstream &f){
+  string line;
+  getline(f, line);             //reading the first row and column 
+  int* rowCol = getRowCol(line);
+  int row = rowCol[0]; 
+  int col = rowCol[1];
+
+  for (int i = 0; i < col; i++){//filling vertex list
+    V.push_back(i);
+  }
+
   line = "";
   for (int i = 0; i < row; i++){
     getline(f, line);           //getting line
 
     for (int j = 0; j < col; j++){
-      if (line[j] != '#'){
-        matrix[i].push_back(1);
-      }else{
-        matrix[i].push_back(0);
-      }
+      if (line[j] != '#')
+        adj_list[i].push_back(j);
     }
     line = "";
   }
 
+  int Case = 0;
+  string str = dfs();
+  for (int i = 0; i < str.length(); i++){
+    if (str[i] == ',')
+      Case++;  
+  }
 
-  // delete rowCol;
-  f.close();
-}
+  showList();
+  showVertexList();
+  cout << dfs() << endl;
 
-void graph::stars(int r, int c, int &s){
-  
+  cout << "Case " << i << ": " << Case << endl;
+
+  delete rowCol;  //freeing memory
 }
 
 int* graph::getRowCol(string line){
@@ -197,11 +219,14 @@ string graph::rm_space(string str){
   return retStr;      //return the result.
 }
 
-void graph::dfs(){
+string graph::dfs(){
     /*
       this function executes depth first search.
       PreCondition: vertex list should not be empty.
     */
+    string str = "";
+    stringstream ss;
+
     stack<int> s;
     map<int, int> colors; //1:w 2:g 3:b
 
@@ -216,16 +241,19 @@ void graph::dfs(){
       int u(s.top());
       s.pop();
       for (int v: adj_list[u]){
-        if(colors.find(v)->second==1){
+        if(colors.find(v)->second == 1){
           colors[v] = 2;
           s.push(v);
         }
       }
-      cout<<u<<" ";
+      // cout<< u << " ";
+      ss << u << ",";
 
-      colors[u]=3;
+      colors[u] = 3;
     }
-    cout<<endl;
+    // cout << endl;
+    ss >> str;
+    return str;
 }
 
 
@@ -236,14 +264,36 @@ void graph::display() {
     PreCondition: matrix, list, vertex list has to be initiated.
   */
   cout<<"Adjacency Matrix:"<<endl;
+  showMatrix();
+
+  cout<<"Adjacency List (outbound):"<<endl;
+  showList();
+
+  cout<<"Inbound List:"<<endl;
+  showInboundList();
+
+  cout<<"VERTEX LIST:"<<endl;
+  showVertexList();
+
+  cout<<"Depth first Search:"<<endl;
+  cout << dfs() << endl;
+
+  // cout<<"Topologicalsort sort:"<<endl;
+  // topologicalsort();
+
+  cout << endl;
+}
+
+void graph::showMatrix(){
   for (int i = 0; i < matrix.size(); i++){
     for (int j = 0; j < matrix[i].size(); j++)
       cout << matrix[i][j] << " ";
     cout << endl;
   }
   cout << endl;
+}
 
-  cout<<"Adjacency List (outbound):"<<endl;
+void graph::showList(){
   for (auto pair: adj_list){
     cout << pair.first << ": [";
     for (int i = 0; i < pair.second.size(); i++){
@@ -254,27 +304,20 @@ void graph::display() {
     cout << "]" << endl;
   }
   cout <<  endl;
+}
 
-  cout<<"Inbound List:"<<endl;
-  for (auto pair: inbound){
+void graph::showInboundList(){
+   for (auto pair: inbound){
     cout << pair.first << ": [";
     cout << pair.second;
     cout << "]" << endl;
   }
   cout <<  endl;
-
-  cout<<"VERTEX LIST:"<<endl;
+}
+    
+void graph::showVertexList(){
   for (auto item: V){
     cout << item << " ";
   }
   cout <<  endl;
-
-  cout<<"Depth first Search:"<<endl;
-  dfs();
-  cout << endl;
-
-  // cout<<"Topologicalsort sort:"<<endl;
-  // topologicalsort();
-
-  cout << endl;
 }
