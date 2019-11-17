@@ -23,7 +23,7 @@ private:
     map<int, int> inbound;            //inbound verteces
 
 public:
-    graph(string file);               //constructor #1
+    graph(string file, int opt = 0);      //constructor #1
 
     void display();                   //showing graph information
     void dfs();                       //depth first search
@@ -34,10 +34,15 @@ private:
     void insert(                      //inserting matrix
         vector<vector<int> > matrix); 
     void make_mx(string file);        //making the matrix
+    void make_star_mx(string file);   //making matrix for kattis star
+    void make_coast_mx(string file);  //making matrix for kattis coast
     void make_list();                 //making the list based on the matrix
     void initialize();                //initializing the data
     void getInbound();                //retrieving inbound verteces
     bool isCycle() const;             //detecting cycles
+
+    int* getRowCol(string line);      //extracting row and col from counting stars
+    void stars(int r, int c, int &s);
 };
 #include "graph.cpp"
 #endif

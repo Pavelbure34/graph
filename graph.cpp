@@ -6,12 +6,20 @@
 */
 
 
-graph::graph(string file){
+graph::graph(string file, int opt){
   //constructor #1
-  make_mx(file);
-  insert(matrix);
-  make_list();
-  getInbound();
+  switch(opt){
+    case 1:        //kattis:stars
+      make_star_mx(file);
+      break;
+    case 2:        //kattis:coast
+      break;
+    default:
+      make_mx(file);
+      insert(matrix);
+      make_list();
+      getInbound();
+  }
 }
 
 void graph::topologicalsort(){
@@ -91,6 +99,76 @@ void graph::make_mx(string file){
   }
 
   i.close();
+}
+
+void graph::make_star_mx(string file){
+  ifstream f;
+  f.open(file);
+  string line;
+  int *rowCol, row, col;
+  int case_1, case_2;
+
+  //case 1.
+  getline(f, line);             //reading the first row and column 
+  rowCol = getRowCol(line);
+  row = rowCol[0]; 
+  col = rowCol[1];
+
+  matrix.resize(row);
+  line = "";
+  for (int i = 0; i < row; i++){
+    getline(f, line);           //getting line
+
+    for (int j = 0; j < col; j++){
+      if (line[j] != '#'){
+        matrix[i].push_back(1);
+      }else{
+        matrix[i].push_back(0);
+      }
+    }
+    line = "";
+  }
+
+
+  // delete rowCol;
+  f.close();
+}
+
+void graph::stars(int r, int c, int &s){
+  
+}
+
+int* graph::getRowCol(string line){
+  int* rowCol = new int[2];
+  int split, row, col;
+  string s_row, s_col;
+
+  //finding the split between row and col int
+  for (int i = 0; i < line.length(); i++)
+    if (line[i] == ' '){
+      split = i;
+      break;
+    }
+
+  //getting row 
+  s_row = "";
+  for (int i = 0; i < split; i++)
+    s_row += line[i];
+  row = stoi(s_row);
+
+  //getting col
+  s_col = "";
+  for (int i = split + 1; i < line.length(); i++)
+    s_col += line[i];
+  col = stoi(s_col);
+
+  rowCol[0] = row;
+  rowCol[1] = col;
+  return rowCol;
+}
+
+void graph::make_coast_mx(string file){
+
 }
 
 void graph::make_list(){
@@ -175,17 +253,15 @@ void graph::display() {
     }
     cout << "]" << endl;
   }
-    cout <<  endl;
+  cout <<  endl;
 
-    cout<<"Inbound List:"<<endl;
-    for (auto pair: inbound){
-      cout << pair.first << ": [";
-      cout << pair.second;
-      cout << "]" << endl;
-    }
-      cout <<  endl;
-
-
+  cout<<"Inbound List:"<<endl;
+  for (auto pair: inbound){
+    cout << pair.first << ": [";
+    cout << pair.second;
+    cout << "]" << endl;
+  }
+  cout <<  endl;
 
   cout<<"VERTEX LIST:"<<endl;
   for (auto item: V){
