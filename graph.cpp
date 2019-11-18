@@ -9,12 +9,13 @@ graph::graph(string file){
   make_mx(file);
   insert(matrix);
   make_list();
-  getInbound(); 
+  getInbound();
 }
 
 void graph::topologicalsort(){
   /*
     this function executes the topological sort.
+    if it fails it is not going to print out. 
 
     PreCondition:There should not be cycle nor unreachable vertex.
   */
@@ -103,7 +104,7 @@ int* graph::getRowCol(string line){
       break;
     }
 
-  //getting row 
+  //getting row
   s_row = "";
   for (int i = 0; i < split; i++)
     s_row += line[i];
@@ -205,8 +206,8 @@ void graph::display() {
   cout<<"Depth first Search:"<<endl;
   cout << dfs() << endl;
 
-  // cout<<"Topologicalsort sort:"<<endl;
-  // topologicalsort();
+  cout<<"Topologicalsort sort:"<<endl;
+  topologicalsort();
 
   cout << endl;
 }
@@ -241,7 +242,7 @@ void graph::showInboundList(){
   }
   cout <<  endl;
 }
-    
+
 void graph::showVertexList(){
   for (auto item: V){
     cout << item << " ";
