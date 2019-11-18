@@ -24,6 +24,8 @@ private:
 
 public:
     graph(string file);      //constructor #1
+    graph(graph &g);         //copy constructor
+    ~graph();                //destructor
 
     void display();                   //showing graph information
     string dfs();                     //depth first search

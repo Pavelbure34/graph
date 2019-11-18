@@ -12,6 +12,39 @@ graph::graph(string file){
   getInbound();
 }
 
+graph::graph(graph &g){
+  //copying the matrix.
+  this->matrix.resize(g.matrix.size());
+  for (int r = 0; r < g.matrix.size(); r++){
+    this->matrix[r].resize(g.matrix[r].size());
+    for (int c = 0; c < g.matrix[r].size(); c++){
+      this->matrix[r][c] = g.matrix[r][c];
+    }
+  }
+
+  //copying the adj_list
+  for (auto pair: g.adj_list){
+    for (int i = 0; i < pair.second.size(); i++)
+      this->adj_list[pair.first].push_back(pair.second[i]);
+  }
+
+  //copying vertex list
+  for (int v: g.V)
+    this->V.push_back(v);
+
+  //copying inbound
+  for (auto pair: g.inbound){
+    this->inbound[pair.first] = pair.second;
+  }
+}
+
+graph::~graph(){
+  V.clear();
+  matrix.clear();
+  adj_list.clear();
+  inbound.clear();
+};
+
 void graph::topologicalsort(){
   /*
     this function executes the topological sort.
