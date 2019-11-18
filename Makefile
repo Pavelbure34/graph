@@ -10,7 +10,7 @@ test_g: test_g.o
 countingStar: countingStar.o 
 	$(CC) $(OF) countingStar countingStar.o
 
-countingStar.o: countingStar.cpp graph.h graph.cpp
+countingStar.o: countingStar.cpp
 	$(CC) $(CF) countingStar.cpp
 
 test_g.o: test_g.cpp graph.h graph.cpp

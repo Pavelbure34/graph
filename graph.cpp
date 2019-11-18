@@ -1,25 +1,15 @@
 #include "graph.h"
-
 /*
   this is implementation file for graph ADT.
   Coded by Youssef and Alistaire.
 */
 
-
-graph::graph(string file, int opt){
+graph::graph(string file){
   //constructor #1
-  switch(opt){
-    case 1:        //kattis:stars
-      make_star_list(file);
-      break;
-    case 2:        //kattis:coast
-      break;
-    default:
-      make_mx(file);
-      insert(matrix);
-      make_list();
-      getInbound();
-  }
+  make_mx(file);
+  insert(matrix);
+  make_list();
+  getInbound(); 
 }
 
 void graph::topologicalsort(){
@@ -101,65 +91,6 @@ void graph::make_mx(string file){
   i.close();
 }
 
-void graph::make_star_list(string file){
-  ifstream f;
-  f.open(file);
-  string line;
-  int *rowCol, row, col;
-  int case_1, case_2;
-  case_1 = case_2 = 0;         //initializing
-
-  //case 1.
-  stars(1, f);
- 
-  V.clear();      //resetting
-  adj_list.clear();
-  cout << endl;
-  
-  //case2
-  stars(2, f);
-
-  f.close();
-}
-
-void graph::stars(int i, ifstream &f){
-  string line;
-  getline(f, line);             //reading the first row and column 
-  int* rowCol = getRowCol(line);
-  int row = rowCol[0]; 
-  int col = rowCol[1];
-
-  for (int i = 0; i < col; i++){//filling vertex list
-    V.push_back(i);
-  }
-
-  line = "";
-  for (int i = 0; i < row; i++){
-    getline(f, line);           //getting line
-
-    for (int j = 0; j < col; j++){
-      if (line[j] != '#')
-        adj_list[i].push_back(j);
-    }
-    line = "";
-  }
-
-  int Case = 0;
-  string str = dfs();
-  for (int i = 0; i < str.length(); i++){
-    if (str[i] == ',')
-      Case++;  
-  }
-
-  showList();
-  showVertexList();
-  cout << dfs() << endl;
-
-  cout << "Case " << i << ": " << Case << endl;
-
-  delete rowCol;  //freeing memory
-}
-
 int* graph::getRowCol(string line){
   int* rowCol = new int[2];
   int split, row, col;
@@ -187,10 +118,6 @@ int* graph::getRowCol(string line){
   rowCol[0] = row;
   rowCol[1] = col;
   return rowCol;
-}
-
-void graph::make_coast_mx(string file){
-
 }
 
 void graph::make_list(){
